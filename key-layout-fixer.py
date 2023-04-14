@@ -3,7 +3,7 @@ import discord
 from discord.ext import commands
 
 # GRAB THE API TOKEN FROM THE .ENV FILE.
-DISCORD_TOKEN = "MTA5NjQwNzYzNDE2NjQxNTQyMg.GK8q_8.Hz_mmuLd-Q_jhE4r0RZGguf6JlVktErUPYCvVc"
+DISCORD_TOKEN = "Your_token"
 
 intents = discord.Intents.default()
 intents.messages = True
