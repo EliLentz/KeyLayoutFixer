@@ -7,7 +7,7 @@ en = enchant.Dict("en_US")
 ru = enchant.Dict("ru_RU")
 
 # THE API TOKEN
-DISCORD_TOKEN = "MTA5NjQwNzYzNDE2NjQxNTQyMg.Gtux6N.pGrVKWSKHrCpzVY95sc7dtuxEf-xQlyJ5gfHMA"
+DISCORD_TOKEN = "Your_token"
 
 intents = discord.Intents.default()
 intents.messages = True
