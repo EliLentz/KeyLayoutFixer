@@ -2,7 +2,7 @@
 import discord
 from discord.ext import commands
 
-# GRAB THE API TOKEN FROM THE .ENV FILE.
+# THE API TOKEN
 DISCORD_TOKEN = "Your_token"
 
 intents = discord.Intents.default()
