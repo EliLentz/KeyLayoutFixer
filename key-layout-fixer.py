@@ -1,15 +1,24 @@
 # IMPORT DISCORD.PY. ALLOWS ACCESS TO DISCORD'S API.
 import discord
 from discord.ext import commands
+import re
+import enchant
+en = enchant.Dict("en_US")
+ru = enchant.Dict("ru_RU")
 
 # THE API TOKEN
-DISCORD_TOKEN = "Your_token"
+DISCORD_TOKEN = "MTA5NjQwNzYzNDE2NjQxNTQyMg.Gtux6N.pGrVKWSKHrCpzVY95sc7dtuxEf-xQlyJ5gfHMA"
 
 intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True
 intents.reactions = True
-client = commands.Bot(command_prefix='!', intents=intents)
+client = commands.Bot(command_prefix='/', intents=intents)
+
+
+help_command_description = "/help - get all included commands"
+ping_command_description = "/ping - check bot status"
+convert_command_description = "/convert - converting replied text to russian/english language"
 
 emoji = '\N{THUMBS UP SIGN}'
 english_to_russian = {
@@ -31,7 +40,7 @@ async def on_ready():
         print(f"- {guild.id} (name: {guild.name})")
         guild_count = guild_count + 1
 
-    print("SampleDiscordBot is in " + str(guild_count) + " guilds.")
+    print("KeyLayoutFixer is in " + str(guild_count) + " guilds.")
 
 
 @client.command()
@@ -57,7 +66,7 @@ async def convert(ctx):
             await ctx.send(rus_converted)
         else:
             await ctx.send(eng_converted)
-            
+
     else:
         await ctx.send("Please reply to a message with the !convert command to convert the text.")
 
@@ -66,6 +75,15 @@ async def convert(ctx):
 async def on_message(message):
     if message.author == client.user:
         return
+
+    if client.user in message.mentions:
+        separetaed_message = re.sub(r'<@!?(\d+)>|<@&?(\d+)>', '', message.content)
+        separetaed_message = re.sub(r'[^\w\s]', '', separetaed_message.strip()).split(' ')
+        for word in separetaed_message: 
+            if en.check(word):
+                await message.channel.send(word + " is an english word")
+            elif ru.check(word): await message.channel.send(word + " is a russian word")
+            else: await message.channel.send(word + " isn't a russian or english word")
 
     await client.process_commands(message)
 
