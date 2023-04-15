@@ -1,20 +1,24 @@
-# IMPORT DISCORD.PY. ALLOWS ACCESS TO DISCORD'S API.
 import discord
 from discord.ext import commands
+from dotenv import load_dotenv
 import re
 import enchant
+import os
+
 en = enchant.Dict("en_US")
 ru = enchant.Dict("ru_RU")
 
+# LOADS THE .ENV FILE THAT RESIDES ON THE SAME LEVEL AS THE SCRIPT.
+load_dotenv()
+
 # THE API TOKEN
-DISCORD_TOKEN = "Your_token"
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
 intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True
 intents.reactions = True
 client = commands.Bot(command_prefix='/', intents=intents)
-
 
 help_command_description = "/help - get all included commands"
 ping_command_description = "/ping - check bot status"
@@ -76,15 +80,57 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if client.user in message.mentions:
-        separetaed_message = re.sub(r'<@!?(\d+)>|<@&?(\d+)>', '', message.content)
-        separetaed_message = re.sub(r'[^\w\s]', '', separetaed_message.strip()).split(' ')
-        for word in separetaed_message: 
-            if en.check(word):
-                await message.channel.send(word + " is an english word")
-            elif ru.check(word): await message.channel.send(word + " is a russian word")
-            else: await message.channel.send(word + " isn't a russian or english word")
+    message_without_mention = delete_mention(message.content)
+
+    eng_converted = switch_keyboard_layout(
+        message_without_mention, russian_to_english)
+    rus_converted = switch_keyboard_layout(
+        message_without_mention, english_to_russian)
+        
+    separated_eng_message = checking_list_for_empty_str(separate_message(eng_converted))
+    separated_rus_message = checking_list_for_empty_str(separate_message(rus_converted))
+
+    if separated_eng_message and separated_rus_message:
+        rus_words_checked = checking_for_words(separated_rus_message)
+        eng_words_checked = checking_for_words(separated_eng_message)
+
+        if eng_words_checked > rus_words_checked:
+            if message_without_mention != eng_converted:
+                await message.channel.send(eng_converted)
+        elif eng_words_checked < rus_words_checked:
+            if message_without_mention != rus_converted:
+                await message.channel.send(rus_converted)
 
     await client.process_commands(message)
+
+def delete_mention(message):
+    return re.sub(r'<@!?(\d+)>|<@&?(\d+)>', '', message)
+
+#separates Discord incoming message
+def separate_message(message):
+    return re.sub(r'[^\w\s]', '', message.strip()).split(' ')
+
+def checking_list_for_empty_str(list: list[str]):
+    if not list:
+        return
+
+    new_list = []
+
+    for element in list:
+        if element != '':
+            new_list.append(element)
+
+    return new_list
+
+def checking_for_words(separated_message):
+    word_count = int(0)
+
+    for word in separated_message: 
+        if en.check(word):
+            word_count  = word_count + 1
+        elif ru.check(word):
+            word_count = word_count + 1
+
+    return word_count
 
 client.run(DISCORD_TOKEN)
