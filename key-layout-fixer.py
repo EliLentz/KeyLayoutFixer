@@ -20,10 +20,6 @@ intents.message_content = True
 intents.reactions = True
 client = commands.Bot(command_prefix='/', intents=intents)
 
-help_command_description = "/help - get all included commands"
-ping_command_description = "/ping - check bot status"
-convert_command_description = "/convert - converting replied text to russian/english language"
-
 emoji = '\N{THUMBS UP SIGN}'
 english_to_russian = {
     'q': 'й', 'w': 'ц', 'e': 'у', 'r': 'к', 't': 'е', 'y': 'н', 'u': 'г', 'i': 'ш', 'o': 'щ', 'p': 'з', '[': 'х', ']': 'ъ', 'a': 'ф', 's': 'ы', 'd': 'в', 'f': 'а', 'g': 'п', 'h': 'р', 'j': 'о', 'k': 'л', 'l': 'д', ';': 'ж', "'": 'э', 'z': 'я', 'x': 'ч', 'c': 'с', 'v': 'м', 'b': 'и', 'n': 'т', 'm': 'ь', ',': 'б', '.': 'ю', '/': '.',
