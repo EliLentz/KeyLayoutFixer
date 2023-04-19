@@ -7,8 +7,8 @@ https://discord.com/api/oauth2/authorize?client_id=1096407634166415422&permissio
 ## Documentation
 
 It has only two commands:
-1. !ping - to check if its online
-2. !convert - use it as a reply to the message which you want to translate to normal language
+1. /ping - to check if its online
+2. /convert - use it as a reply to the message which you want to translate to normal language
 
 # Still in progress!!!
 
